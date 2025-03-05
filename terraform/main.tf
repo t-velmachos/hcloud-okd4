@@ -24,7 +24,7 @@ module "bootstrap" {
   image_name      = var.image
   server_type     = "cx41"
   subnet          = hcloud_network_subnet.subnet.id
-  ignition_url    = var.bootstrap == true ? "http://${cloudflare_record.dns_a_ignition[0].name}/bootstrap.ign" : ""
+  ignition_url    = var.bootstrap == true ? "http://${cloudflare_dns_record.dns_a_ignition[0].name}/bootstrap.ign" : ""
 }
 
 module "master" {
@@ -38,9 +38,9 @@ module "master" {
   image           = data.hcloud_image.image.id
   image_name      = var.image
   server_type     = "cx41"
-  labels          = {
-    "okd.io/node" = "true",
-    "okd.io/master" = "true",
+  labels = {
+    "okd.io/node"    = "true",
+    "okd.io/master"  = "true",
     "okd.io/ingress" = "true"
   }
   # Manually add apply_to for the labels, until tf_hcloud allows apply_to in the firewall
@@ -61,10 +61,10 @@ module "worker" {
   image           = data.hcloud_image.image.id
   image_name      = var.image
   server_type     = "cx41"
-  labels          = {
-    "okd.io/node" = "true",
+  labels = {
+    "okd.io/node"    = "true",
     "okd.io/ingress" = "true"
-    "okd.io/worker" = "true"
+    "okd.io/worker"  = "true"
   }
   # Manually add apply_to for the labels, until tf_hcloud allows apply_to in the firewall
   # firewall_ids    = [hcloud_firewall.okd-base.id, hcloud_firewall.okd-ingress.id]
